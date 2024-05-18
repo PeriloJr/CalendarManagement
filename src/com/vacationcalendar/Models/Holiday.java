@@ -1,13 +1,15 @@
 package com.vacationcalendar.Models;
 
+import java.time.LocalDate;
+
 public class Holiday {
-    private String date;
+    private LocalDate date;
     private String name;
     private String type;
     private String level;
 
     public String getDate() {
-        return date;
+        return date.toString();
     }
 
     public String getName() {
@@ -23,7 +25,7 @@ public class Holiday {
     }
 
     public Holiday(HolidayJson holidayJson) {
-        this.date = holidayJson.date();
+        this.date = LocalDate.parse(holidayJson.date());
         this.name = holidayJson.name();
         this.type = holidayJson.type();
         this.level = holidayJson.level();

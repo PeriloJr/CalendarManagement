@@ -1,6 +1,7 @@
 package com.vacationcalendar.Classes;
 
 import com.vacationcalendar.Models.Holiday;
+import com.vacationcalendar.Models.HolidayJson;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class HolidayUtils {
     private boolean RemoveEveDays(Holiday holiday){
         return holiday.getName().contains(EVE);
     }
-    private String BrideableDay(Holiday holiday){
+    private LocalDate BrideableDay(Holiday holiday){
         LocalDate date = DataConverter(holiday);
 
         if(RemoveEveDays(holiday)){
@@ -68,26 +69,34 @@ public class HolidayUtils {
         boolean acceptExtraConditions = HolidayExtraConditions(holiday, this.acceptStateHoliday, this.acceptFacultativePoint);
 
         if(IsThursday(date) && acceptExtraConditions){
-            return date.plusDays(1).toString();
+            return date.plusDays(1);
         }else if(IsTuesday(date) && acceptExtraConditions){
-            return date.minusDays(1).toString();
+            return date.minusDays(1);
         }
 
         if(IsCarnivalOrAshWednesday(holiday) && this.acceptCarnival){
-            return date.toString();
+            return date;
         }
 
         return null;
     }
-    public void SearchForBridgeDays(List<Holiday> holidayList){
-        List<String> bridgeHolidays = new ArrayList<>();
-
+    public List<Holiday> SearchForBridgeDays(List<Holiday> holidayList){
+        List<Holiday> bridgeHolidays = new ArrayList<>();
+        LocalDate brigeableDay = null;
         for(Holiday holiday : holidayList){
-            String bridgeDay = BrideableDay(holiday);
-            if(bridgeDay != null)
+            brigeableDay = BrideableDay(holiday);
+            if(brigeableDay != null){
+                HolidayJson bridgeDayJson = new HolidayJson(brigeableDay.toString(), "bridge", "bridge", "bridge");
+                Holiday bridgeDay = new Holiday(bridgeDayJson);
                 bridgeHolidays.add(bridgeDay);
+            }
         }
-        System.out.println(bridgeHolidays);
+
+        for(Holiday hol : bridgeHolidays){
+            System.out.println(hol.getDate());
+        }
+
+        return bridgeHolidays;
     }
     private void SaveInTxtFile(List<Holiday> holidayList){
         List<String> holidayListDate = GetListOfDays(holidayList);

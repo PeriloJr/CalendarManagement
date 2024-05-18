@@ -20,36 +20,28 @@ public class Months {
         this.year = year;
         this.setFirstAndLastDay();
     }
-
     public List<Integer> getDay() {
         return day;
     }
-
     public void setDay(List<Integer> day) {
         this.day = day;
     }
-
     public List<Holiday> getHoliday() {
         return holiday;
     }
-
     public void setHoliday(List<Holiday> holiday) {
         this.holiday = holiday;
     }
-
     public void setFirstAndLastDay(){
         this.firstDay = LocalDate.of(this.year, this.month, 1);
         this.lastDay = firstDay.with(TemporalAdjusters.lastDayOfMonth());
     }
-
     public LocalDate getFirstDay() {
         return firstDay;
     }
-
     public LocalDate getLastDay() {
         return lastDay;
     }
-
     @Override
     public String toString() {
         MonthUtils mUtils = new MonthUtils(this);
