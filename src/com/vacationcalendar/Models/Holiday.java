@@ -8,10 +8,12 @@ public class Holiday {
     private String type;
     private String level;
 
+    public Holiday(LocalDate of) {
+        this.date = of;
+    }
     public String getDate() {
         return date.toString();
     }
-
     public String getName() {
         return name;
     }

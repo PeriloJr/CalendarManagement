@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class HolidayUtils {
     static String FILENAME = "HolidayList.txt";
@@ -21,6 +23,7 @@ public class HolidayUtils {
     private boolean acceptStateHoliday;
     private boolean acceptFacultativePoint;
     private boolean acceptCarnival;
+    private List<Holiday> holidayList;
     public HolidayUtils(boolean acceptStateHoliday, boolean acceptFacultativePoint, boolean acceptCarnival) {
         this.acceptStateHoliday = acceptStateHoliday;
         this.acceptFacultativePoint = acceptFacultativePoint;
@@ -31,6 +34,13 @@ public class HolidayUtils {
         List<Holiday> holidayList = holidayAPI.HolydayList(date, state);
         SaveInTxtFile(holidayList);
         SearchForBridgeDays(holidayList);
+    }
+    public List<Holiday> GetAllHolidayList(LocalDateTime date, String state){
+        HolidayAPI holidayAPI = new HolidayAPI();
+        List<Holiday> holidayList = holidayAPI.HolydayList(date, state);
+        List<Holiday> bridgeList = SearchForBridgeDays(holidayList);
+        holidayList.addAll(bridgeList);
+        return holidayList;
     }
     private List<String> GetListOfDays(List<Holiday> holidayList){
         return holidayList.stream().map(Holiday::getDate).toList();
@@ -90,10 +100,6 @@ public class HolidayUtils {
                 Holiday bridgeDay = new Holiday(bridgeDayJson);
                 bridgeHolidays.add(bridgeDay);
             }
-        }
-
-        for(Holiday hol : bridgeHolidays){
-            System.out.println(hol.getDate());
         }
 
         return bridgeHolidays;
